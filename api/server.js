@@ -1,10 +1,13 @@
-const { createServer } = require("http");
+const { createServer, get } = require("http");
 const express = require("express");
 const { execute, subscribe } = require("graphql");
 const { ApolloServer, gql } = require("apollo-server-express");
 const { PubSub, withFilter } = require("graphql-subscriptions");
 const { SubscriptionServer } = require("subscriptions-transport-ws");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
+const mongoose = require("mongoose");
+const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.pzxhg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+
 
 const messages = [];
 const users = [
@@ -14,7 +17,55 @@ const users = [
 ];
 const conversations = [];
 
+const getUser = (userId) => {
+    try {
+        const user = users.find(user => user._id === userId);
+        if (!user) throw new Error("no user found");
+        return {...user, password: null}
+    } catch (err) {
+        throw err
+    }
+};
+
+const getUsers = (userIds) => {
+    try {
+        const foundUsers = userIds.map(id => users.find(user => user._id === id));
+        return foundUsers;
+    } catch (err) {
+        throw err;
+    }
+};
+
+const getMessages = (messageIds) => {
+    try {
+        // const foundMessages = messageIds.map(id => messages.find(message => message._id === id));
+        // console.log("foundMessages", foundMessages)
+        return [messages[0]]
+    } catch (err) {
+        throw "this went poorly";
+    }
+}
+
+const getConversation = (conversationId) => {
+    try {
+        const foundConversation = conversations.find(conversation => conversation._id === conversationId);
+        const formattedConvo = {...foundConversation }
+        return formattedConvo;
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+
 (async () => {
+    try {
+        await mongoose.connect(connectionString);
+        console.log("🔌 connected to db");
+    }
+    catch (err) {
+        throw err;
+    }
     const PORT = 8090;
     const pubsub = new PubSub();
     const app = express();
@@ -45,8 +96,8 @@ const conversations = [];
         type Conversation {
             _id: ID!
             topic: String!
-            messages: [Message!]!
-            users: [User]!
+            messages: [Message]!
+            users: [User!]!
         }
 
         type Query {
@@ -87,9 +138,9 @@ const conversations = [];
                     users.push(newUser);
                     return {...newUser, password: null};
             },
-            createConversation: (_, { topic, users }) => {
+            createConversation:  (_, { topic, users }) => {
                 const id = Math.floor(Math.random() * 2000) + 1;
-                const newConversation = {_id: String(id), topic: topic, messages: messages, users: users};
+                const newConversation = {_id: String(id), topic: topic, messages: [], users: getUsers.bind(this, users)};
                 conversations.push(newConversation)
                 return newConversation;
             },
@@ -99,18 +150,15 @@ const conversations = [];
                 });
                 if (!foundConversation) throw new Error("Conversation doesn't exist");
                 const id = Math.floor(Math.random() * 2000) + 1;
-                const newMessage = { _id: String(id), body: body, sender: 1, receiver: receiverId, conversation: foundConversation._id}
+                const newMessage = { _id: String(id), body: body, sender: 1, receiver: getUser.bind(this, receiverId), conversation: getConversation.bind(this, foundConversation._id)};
+                foundConversation.messages.push(newMessage._id);
+                console.log('foundConvo', foundConversation)
+                console.log(newMessage)
                 messages.push(newMessage);
                 pubsub.publish("NEW_MESSAGE", { newMessage:  newMessage});
                 return newMessage
 
             }
-            
-            // createNum: (_, {num}) => {
-            //     numbers.push({value: num})
-            //     pubsub.publish("NEW_NUMBERS", { newNumbers:  numbers});
-            //     return { value: num };
-            // }
         },
         Subscription: {
             // newMessage: {
@@ -126,11 +174,6 @@ const conversations = [];
                     }
                 )
             }
-
-
-            // newNumbers: {
-            //     subscribe: () => pubsub.asyncIterator(["NEW_NUMBERS"]),
-            // },
         },
     };
 
