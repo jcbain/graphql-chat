@@ -1,54 +1,8 @@
 const { PubSub, withFilter } = require("graphql-subscriptions");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const pubsub = new PubSub();
-
-const messages = [];
-const users = [
-    {_id: '1', username: 'jcbain', email: 'j@j.com', password: '123'},
-    {_id: '2', username: 'dscully', email: 's@s.com', password: '123'},
-    {_id: '3', username: 'fmulder', email: 'm@m.com', password: '123'}
-];
-const conversations = [];
-
-const getUser = (userId) => {
-    try {
-        const user = users.find(user => user._id === userId);
-        if (!user) throw new Error("no user found");
-        return {...user, password: null}
-    } catch (err) {
-        throw err
-    }
-};
-
-const getUsers = (userIds) => {
-    try {
-        const foundUsers = userIds.map(id => users.find(user => user._id === id));
-        return foundUsers;
-    } catch (err) {
-        throw err;
-    }
-};
-
-const getMessages = (messageIds) => {
-    try {
-        // const foundMessages = messageIds.map(id => messages.find(message => message._id === id));
-        // console.log("foundMessages", foundMessages)
-        return [messages[0]]
-    } catch (err) {
-        throw "this went poorly";
-    }
-}
-
-const getConversation = (conversationId) => {
-    try {
-        const foundConversation = conversations.find(conversation => conversation._id === conversationId);
-        const formattedConvo = {...foundConversation }
-        return formattedConvo;
-    } catch (err) {
-        throw err;
-    }
-}
 
 const resolvers = {
     Query: {
@@ -57,15 +11,26 @@ const resolvers = {
         },
         messages: async (_, { conversationId }, { dataSources: { messages } }) => {
             const result = await messages.getMessagesByConversationId(conversationId)
-            console.log(result);
             return result;
         },
-        conversations: () => conversations,
-        login: (_, {username, password}) => {
-            const foundUser = users.find(user => user.username === username);
-            if (!foundUser) throw new Error("no user found with that email");
-            if (!foundUser.password === password) throw new Error("incorrect password");
-            return { ...foundUser, password: null };
+        conversations: async (_, __, {dataSources: { conversations }}) => {
+            return await conversations.Model.find();
+        },
+        login: async (_, {username, password}, { dataSources: { users }}) => {
+            const numHours = 2;
+            if (!username || !password ) throw new Error("username or email can't be blank");
+            const foundUser = await users.getUserByUsername(username);
+            if (!foundUser) throw new Error("no user found with that username");
+            
+            const hasValidPassword = await bcrypt.compare(password, foundUser.password);
+            if (!hasValidPassword) throw new Error("password doesn't match");
+
+            const token = jwt.sign({ userId: foundUser.id, username: foundUser.username}, 'supersecretkey', {
+                expiresIn: `${numHours}hr`
+            });
+
+            return { userId: foundUser.id, token: token, tokenExpiration: numHours}
+
         }
     },
     Mutation: {
@@ -133,13 +98,10 @@ const resolvers = {
         }
     },
     Subscription: {
-        // newMessage: {
-        //     subscribe: () => pubsub.asyncIterator(["NEW_MESSAGE"])
-        // }
         newMessage: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator(["NEW_MESSAGE"]),
-                (payload, vars) => {
+                (payload, vars, context ) => {
                     return (payload.newMessage.conversation.toString() === vars.conversationId );
                 }
             )

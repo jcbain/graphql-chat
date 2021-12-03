@@ -29,10 +29,16 @@ module.exports =  gql`
         users: [User!]!
     }
 
+    type AuthData {
+        userId: String!
+        token: String!
+        tokenExpiration: Int!
+    }
+
     type Query {
         messages(conversationId: ID!): [Message!]!
         conversations: [Conversation!]!
-        login(username: String!, password: String!): User!
+        login(username: String!, password: String!): AuthData!
         users: [User!]!
     }
 

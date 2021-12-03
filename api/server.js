@@ -34,22 +34,36 @@ const httpServer = createServer(app);
 
     const schema = makeExecutableSchema({ typeDefs, resolvers });
 
+    const subscriptionServer = SubscriptionServer.create(
+        { schema, execute, subscribe },
+        { server: httpServer, path: '/graphql' }
+    );
+
     const server = new ApolloServer({
         schema,
         dataSources: () => ({
             users: new Users(UserModel),
             conversations: new Conversations(ConversationModel),
             messages: new Messages(MessageModel)
-        })
+        }),
+        context: () => {
+            return {
+                pubsub: 'james'
+            }
+        },
+        plugins: [{
+            async serverWillStart() {
+                return {
+                    async drainServer() {
+                        subscriptionServer.close()
+                    }
+                }
+            }
+        }] 
     });
 
     await server.start();
     server.applyMiddleware({ app });
-
-    SubscriptionServer.create(
-        { schema, execute, subscribe },
-        { server: httpServer, path: server.graphqlPath }
-    );
 
     httpServer.listen(PORT, () => {
         console.log(`🚀 Query endpoint ready at http://localhost:${PORT}${server.graphqlPath}`);
