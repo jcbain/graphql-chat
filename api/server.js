@@ -7,6 +7,9 @@ const { makeExecutableSchema } = require("@graphql-tools/schema");
 const typeDefs = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
 
+const Users = require('./data-sources/Users');
+const UserModel = require('./models/user');
+
 const mongoose = require("mongoose");
 const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.pzxhg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
 
@@ -27,6 +30,9 @@ const httpServer = createServer(app);
 
     const server = new ApolloServer({
         schema,
+        dataSources: () => ({
+            users: new Users(UserModel)
+        })
     });
 
     await server.start();

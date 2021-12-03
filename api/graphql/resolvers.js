@@ -1,4 +1,5 @@
 const { PubSub, withFilter } = require("graphql-subscriptions");
+const bcrypt = require("bcryptjs");
 
 const pubsub = new PubSub();
 
@@ -51,7 +52,10 @@ const getConversation = (conversationId) => {
 
 const resolvers = {
     Query: {
-        users: () => users,
+        users: async (_,__, {dataSources: { users }}) => {
+            console.log(users);
+            return await users.model.find();
+        },
         messages: () => messages,
         conversations: () => conversations,
         login: (_, {username, password}) => {
@@ -62,12 +66,30 @@ const resolvers = {
         }
     },
     Mutation: {
-        createUser: (_, {userInput}) => {
-                const {username, email, password} = userInput;
-                const id = Math.floor(Math.random() * 2000) + 1;
-                const newUser = {_id: String(id), username, email, password };
-                users.push(newUser);
-                return {...newUser, password: null};
+        createUser: async (_, {userInput}, {dataSources: { users }}) => {
+            const {username, email, password} = userInput;
+            if (!username || !email || !password) throw new Error("username, email and password must not be empty");
+
+            const foundUser = await users.getUserByEmail(email) || await users.getUserByUsername(username);
+
+            if (foundUser) throw new Error("user with that email or username already exists");
+
+            const hash = await bcrypt.hash(password, 10);
+
+            const newUser = new users.Model({
+                username,
+                email,
+                password: hash
+            });
+
+            try {
+                const result = await newUser.save();
+                // console.log(result)
+                // return { ...result, password: null };
+                return { ...result._doc, password: null };
+            } catch (err) {
+                throw err;
+            }
         },
         createConversation:  (_, { topic, users }) => {
             const id = Math.floor(Math.random() * 2000) + 1;
