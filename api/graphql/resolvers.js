@@ -6,15 +6,17 @@ const pubsub = new PubSub();
 
 const resolvers = {
     Query: {
-        users: async (_,__, {dataSources: { users }, req}) => {
+        users: async (_,__, {dataSources: { users }, req }) => {
             console.log(req.isAuth)
             return await users.Model.find();
         },
-        messages: async (_, { conversationId }, { dataSources: { messages } }) => {
+        messages: async (_, { conversationId }, { dataSources: { messages }, req }) => {
+            if (!req.isAuth) throw new Error("you don't have access to do that");
             const result = await messages.getMessagesByConversationId(conversationId)
             return result;
         },
-        conversations: async (_, __, {dataSources: { conversations }}) => {
+        conversations: async (_, __, {dataSources: { conversations }, req }) => {
+            if (!req.isAuth) throw new Error("you don't have access to do that");
             return await conversations.Model.find();
         },
         login: async (_, {username, password}, { dataSources: { users }}) => {

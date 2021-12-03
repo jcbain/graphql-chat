@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   const authHeader = req.get("Authorization");
+  console.log('hi there')
   if (!authHeader) {
     req.isAuth = false;
     return next();
@@ -21,6 +22,7 @@ module.exports = (req, res, next) => {
     } 
     req.isAuth = true;
     req.userId = decodedToken.userId;
+    return next();
   }catch (err) {
     req.isAuth = false;
     return next()
