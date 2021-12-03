@@ -140,9 +140,7 @@ const resolvers = {
             subscribe: withFilter(
                 () => pubsub.asyncIterator(["NEW_MESSAGE"]),
                 (payload, vars) => {
-                    console.log(payload)
-                    console.log(vars)
-                    return (payload.newMessage.conversation === vars.conversationId );
+                    return (payload.newMessage.conversation.toString() === vars.conversationId );
                 }
             )
         }
