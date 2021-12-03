@@ -4,6 +4,7 @@ const { execute, subscribe } = require("graphql");
 const { ApolloServer } = require("apollo-server-express");
 const { SubscriptionServer } = require("subscriptions-transport-ws");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
+const isAuth = require("./middleware/is-auth");
 const typeDefs = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
 
@@ -21,6 +22,8 @@ const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.
 
 const PORT = 8090;
 const app = express();
+
+app.use(isAuth);
 const httpServer = createServer(app);
 
 (async () => {
