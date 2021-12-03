@@ -30,7 +30,7 @@ module.exports =  gql`
     }
 
     type Query {
-        messages: [Message!]!
+        messages(conversationId: ID!): [Message!]!
         conversations: [Conversation!]!
         login(username: String!, password: String!): User!
         users: [User!]!

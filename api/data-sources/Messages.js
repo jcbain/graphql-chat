@@ -1,15 +1,14 @@
 const { MongoDataSource } = require('apollo-datasource-mongodb');
 
-class Conversations extends MongoDataSource {
+class Messages extends MongoDataSource {
     constructor(model){
         super(model);
         this.Model = model;
     }
 
-    async getConversationById(conversationId){
-        return await this.findOneById(conversationId);
+    async getMessagesByConversationId(conversationId) {
+      return await this.findByFields({ conversation: conversationId })
     }
-
 
     // getUser(userId) {
     //     return this.findOneById(userId);
@@ -27,4 +26,4 @@ class Conversations extends MongoDataSource {
 
 };
 
-module.exports = Conversations;
+module.exports = Messages;

@@ -55,7 +55,11 @@ const resolvers = {
         users: async (_,__, {dataSources: { users }}) => {
             return await users.Model.find();
         },
-        messages: () => messages,
+        messages: async (_, { conversationId }, { dataSources: { messages } }) => {
+            const result = await messages.getMessagesByConversationId(conversationId)
+            console.log(result);
+            return result;
+        },
         conversations: () => conversations,
         login: (_, {username, password}) => {
             const foundUser = users.find(user => user.username === username);
@@ -103,19 +107,28 @@ const resolvers = {
                 throw err;
             }
         },
-        createMessage: (_, {body, receiverId, conversationId}) => {
-            const foundConversation = conversations.find(convo => {
-                return convo._id == conversationId
+        createMessage: async (_, {body, receiverId, conversationId}, { dataSources: { messages, conversations, users } }) => {
+
+            if (!body || !receiverId || !conversationId ) throw new Error("all message fields are required");
+
+            const newMessage = new messages.Model({
+                body,
+                sender: "61a9c543e5d91654d245998c",
+                receiver: receiverId,
+                conversation: conversationId
             });
-            if (!foundConversation) throw new Error("Conversation doesn't exist");
-            const id = Math.floor(Math.random() * 2000) + 1;
-            const newMessage = { _id: String(id), body: body, sender: 1, receiver: getUser.bind(this, receiverId), conversation: getConversation.bind(this, foundConversation._id)};
-            foundConversation.messages.push(newMessage._id);
-            console.log('foundConvo', foundConversation)
-            console.log(newMessage)
-            messages.push(newMessage);
-            pubsub.publish("NEW_MESSAGE", { newMessage:  newMessage});
-            return newMessage
+
+            try {
+                const result = await newMessage.save();
+                const conversation = await conversations.getConversationById(conversationId);
+                conversation.messages.push(newMessage);
+                await conversation.save();
+                pubsub.publish("NEW_MESSAGE", { newMessage:  newMessage});
+                return {...result._doc, conversation: conversation, sender: await users.getUser(result._doc.sender), receiver: await users.getUser(result._doc.receiver)}
+
+            } catch (err) {
+                throw err;
+            }
 
         }
     },

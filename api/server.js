@@ -11,7 +11,10 @@ const Users = require('./data-sources/Users');
 const UserModel = require('./models/user');
 
 const Conversations = require('./data-sources/Conversations');
-const ConversationModel = require('./models/conversation')
+const ConversationModel = require('./models/conversation');
+
+const Messages = require('./data-sources/Messages');
+const MessageModel = require('./models/message');
 
 const mongoose = require("mongoose");
 const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.pzxhg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
@@ -35,7 +38,8 @@ const httpServer = createServer(app);
         schema,
         dataSources: () => ({
             users: new Users(UserModel),
-            conversations: new Conversations(ConversationModel)
+            conversations: new Conversations(ConversationModel),
+            messages: new Messages(MessageModel)
         })
     });
 
