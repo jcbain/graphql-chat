@@ -6,8 +6,12 @@ class Users extends MongoDataSource {
         this.Model = model;
 
     }
-    getUser(userId) {
-        return this.findOneById(userId);
+    async getUser(userId) {
+        return await this.findOneById(userId);
+    }
+
+    async getUsers(userIds) {
+        return await this.findManyByIds(userIds);
     }
 
     async getUserByEmail(email) {

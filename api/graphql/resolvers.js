@@ -53,8 +53,7 @@ const getConversation = (conversationId) => {
 const resolvers = {
     Query: {
         users: async (_,__, {dataSources: { users }}) => {
-            console.log(users);
-            return await users.model.find();
+            return await users.Model.find();
         },
         messages: () => messages,
         conversations: () => conversations,
@@ -84,18 +83,25 @@ const resolvers = {
 
             try {
                 const result = await newUser.save();
-                // console.log(result)
-                // return { ...result, password: null };
                 return { ...result._doc, password: null };
             } catch (err) {
                 throw err;
             }
         },
-        createConversation:  (_, { topic, users }) => {
-            const id = Math.floor(Math.random() * 2000) + 1;
-            const newConversation = {_id: String(id), topic: topic, messages: [], users: getUsers.bind(this, users)};
-            conversations.push(newConversation)
-            return newConversation;
+        createConversation: async (_, { topic, users }, { dataSources }) => {
+
+            const newConvo = new dataSources.conversations.Model({
+                topic,
+                users: await dataSources.users.getUsers(users),
+                messages: []
+            });
+
+            try {
+                const result = await newConvo.save();
+                return {...result._doc }
+            } catch (err) {
+                throw err;
+            }
         },
         createMessage: (_, {body, receiverId, conversationId}) => {
             const foundConversation = conversations.find(convo => {
