@@ -49,9 +49,9 @@ const httpServer = createServer(app);
             conversations: new Conversations(ConversationModel),
             messages: new Messages(MessageModel)
         }),
-        context: () => {
+        context: async ({req}) => {
             return {
-                pubsub: 'james'
+                req: req
             }
         },
         plugins: [{
