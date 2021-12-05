@@ -1,11 +1,13 @@
 const { useState } = require("react")
 
 const Login = (props) => {
+  const {login} = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!password || !username) return;
 
     const requestBody = {
       query: `
@@ -23,17 +25,24 @@ const Login = (props) => {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
+      // credentials: "include"
     })
     .then(res => {
+      console.log(res)
       if(res.status !== 200) {
         console.log(res)
         return;
       }
       return res.json()
     })
-    .then(res => console.log(res.data))
+    // .then(res => {
+    //   console.log(res.data)
+    //   setPassword("")
+    //   setUsername("")
+    //   login(res.data.login)
+    // })
     .catch(err => console.error(err))
 
   }

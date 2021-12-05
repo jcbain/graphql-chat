@@ -19,7 +19,7 @@ const resolvers = {
             if (!req.isAuth) throw new Error("you don't have access to do that");
             return await conversations.Model.find();
         },
-        login: async (_, {username, password}, { dataSources: { users }}) => {
+        login: async (_, {username, password}, { dataSources: { users }, res}) => {
             const numHours = 2;
             if (!username || !password ) throw new Error("username or email can't be blank");
             const foundUser = await users.getUserByUsername(username);
@@ -32,6 +32,9 @@ const resolvers = {
                 expiresIn: `${numHours}hr`
             });
 
+
+            res.cookie('something', token);
+            console.log('res', res)
             return { userId: foundUser.id, token: token, tokenExpiration: numHours}
 
         }

@@ -4,6 +4,7 @@ const { execute, subscribe } = require("graphql");
 const { ApolloServer } = require("apollo-server-express");
 const { SubscriptionServer } = require("subscriptions-transport-ws");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
+const cookieParser = require("cookie-parser");
 const isAuth = require("./middleware/is-auth");
 const typeDefs = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
@@ -23,6 +24,7 @@ const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.
 const PORT = 8090;
 const app = express();
 
+app.use(cookieParser());
 app.use(isAuth);
 const httpServer = createServer(app);
 
@@ -49,9 +51,10 @@ const httpServer = createServer(app);
             conversations: new Conversations(ConversationModel),
             messages: new Messages(MessageModel)
         }),
-        context: async ({req}) => {
+        context: async ({req, res}) => {
             return {
-                req: req
+                req: req,
+                res: res
             }
         },
         plugins: [{
@@ -62,7 +65,13 @@ const httpServer = createServer(app);
                     }
                 }
             }
-        }] 
+        }],
+        cors: {
+            origin: ["http://localhost:3000"],
+            credentials: true,
+            allowedHeaders: ['Content-Type', 'Authorization'],
+            exposedHeaders: ["set-cookie"]
+        }
     });
 
     await server.start();
