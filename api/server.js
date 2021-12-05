@@ -23,7 +23,16 @@ const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.
 
 const PORT = 8090;
 const app = express();
-
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+//     res.setHeader("Access-Control-Allow-Credentials", true)
+//     res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000");
+//     if(req.method === 'OPTIONS') {
+//         return res.sendStatus(200);
+//     }
+//     next();
+// })
 app.use(cookieParser());
 app.use(isAuth);
 const httpServer = createServer(app);
@@ -66,16 +75,17 @@ const httpServer = createServer(app);
                 }
             }
         }],
-        cors: {
-            origin: ["http://localhost:3000"],
-            credentials: true,
-            allowedHeaders: ['Content-Type', 'Authorization'],
-            exposedHeaders: ["set-cookie"]
-        }
+        
     });
 
     await server.start();
-    server.applyMiddleware({ app });
+    server.applyMiddleware({ app, cors: {
+        origin: "http://localhost:3000",
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        exposedHeaders: ["set-cookie"],
+        methods: ['GET', 'POST', 'OPTIONS']
+    } });
 
     httpServer.listen(PORT, () => {
         console.log(`🚀 Query endpoint ready at http://localhost:${PORT}${server.graphqlPath}`);

@@ -1,13 +1,28 @@
-const { useState } = require("react")
+import { useState } from "react";
+import { gql, useQuery} from "@apollo/client"
+
 
 const Login = (props) => {
   const {login} = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+//   const stuff = gql`
+//  query {
+//    login(username: "jbain", password: "123") {
+//         userId
+//         token
+//          tokenExpiration
+//      }
+//     }
+// `
 
+// const newStuff = useQuery(stuff);
+// console.log(newStuff)
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!password || !username) return;
+
 
     const requestBody = {
       query: `
@@ -37,12 +52,12 @@ const Login = (props) => {
       }
       return res.json()
     })
-    // .then(res => {
-    //   console.log(res.data)
-    //   setPassword("")
-    //   setUsername("")
-    //   login(res.data.login)
-    // })
+    // // .then(res => {
+    // //   console.log(res.data)
+    // //   setPassword("")
+    // //   setUsername("")
+    // //   login(res.data.login)
+    // // })
     .catch(err => console.error(err))
 
   }

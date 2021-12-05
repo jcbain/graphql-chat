@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
   //   req.isAuth = false;
   //   return next();
   // }
-  res.cookie('test', 'test')
+  res.cookie('supertestcookie', 'test')
   // const token = authHeader.split(" ")[1];
   console.log(req.cookies)
   const { token } = req.cookies;

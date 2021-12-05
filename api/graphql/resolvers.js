@@ -33,7 +33,9 @@ const resolvers = {
             });
 
 
-            res.cookie('something', token);
+            res.cookie('something', token, {
+                secure: false
+            });
             console.log('res', res)
             return { userId: foundUser.id, token: token, tokenExpiration: numHours}
 
