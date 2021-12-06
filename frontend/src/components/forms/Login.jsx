@@ -1,10 +1,20 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router";
+import { keyframes } from "styled-components";
+
+import { useAuth } from "../../contexts/AuthProvider";
+import { makeHttpRequest } from "../../adapters/requests"
 import { Container, Form, Title, Input, Button } from './styles';
 
 const Login = (props) => {
-  const {login} = props;
+  // const { login } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
+
+  const from = location.state?.from?.pathname || "/";
 
   
   const handleSubmit = (event) => {
@@ -22,28 +32,16 @@ const Login = (props) => {
         }
       `
     }
-
-    fetch('http://localhost:8090/graphql', {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: "include"
-    })
+    makeHttpRequest(requestBody)
     .then(res => {
-      console.log(res)
-      if(res.status !== 200) {
-        console.log(res)
-        return;
+      if(!res.data) {
+        auth.signOut(() => console.log('logged out'))
+        return console.log(res.errors)
       }
-      return res.json()
-    })
-    .then(res => {
       console.log(res)
       setPassword("")
       setUsername("")
-      login(res.data.login)
+      auth.signIn(res.data.login, () => navigate(from, { replace: true }))
     })
     .catch(err => console.error(err))
 

@@ -39,6 +39,7 @@ module.exports =  gql`
         messages(conversationId: ID!): [Message!]!
         conversations: [Conversation!]!
         login(username: String!, password: String!): AuthData!
+        checkAuth: AuthData
         users: [User!]!
     }
 

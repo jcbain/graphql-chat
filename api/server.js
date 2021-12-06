@@ -80,7 +80,7 @@ const httpServer = createServer(app);
 
     await server.start();
     server.applyMiddleware({ app, cors: {
-        origin: "http://localhost:3000",
+        origin: ["http://localhost:3000", "https://studio.apollographql.com"],
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization'],
         exposedHeaders: ["set-cookie"],

@@ -40,6 +40,19 @@ const resolvers = {
 
 
             return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours}
+        },
+        checkAuth: async (_, __, { dataSources: { users }, req}) => {
+            console.log('req', req)
+            if (!req.userId){
+                throw new Error("user is not logged in");
+            }
+            const foundUser = await users.getUser(req.userId);
+
+            if (!foundUser) {
+                throw new Error("you are not logged in");
+            }
+            
+            return {username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: 2}
 
         }
     },

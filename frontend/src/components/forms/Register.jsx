@@ -10,7 +10,10 @@ const Register = (props) => {
   
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!password || !username) return;
+    if (!password || !username || !username || !passwordCheck ) return;
+
+    if (password !== passwordCheck) return;
+
 
     const requestBody = {
       query: `
@@ -23,7 +26,7 @@ const Register = (props) => {
       `
     };
 
-    fetch('http://localhost:8090/graphql', {
+    fetch('/graphql', {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
@@ -66,7 +69,7 @@ const Register = (props) => {
           placeholder="password"
           onChange={event => setPassword(event.target.value)}
         />
-           <Input value={passwordCheck} 
+        <Input value={passwordCheck} 
           placeholder="verify password"
           onChange={event => setPasswordCheck(event.target.value)}
         />
