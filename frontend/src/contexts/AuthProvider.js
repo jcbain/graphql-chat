@@ -11,13 +11,7 @@ const AuthProvider = (props) => {
         loggedIn: false,
         username: "",
         email: ""
-    })
-    const navigate = useNavigate();
-    const location = useLocation();
-  
-    const from = location.state?.from?.pathname || "/";
-
-    console.log( "from", from )
+    });
 
     useEffect(() => {
         const requestBody = {
@@ -37,7 +31,7 @@ const AuthProvider = (props) => {
                 return console.log(res.errors)
             }
             console.log(res)
-            signIn(res.data.checkAuth, () => navigate(from, { replace: true }))
+            signIn(res.data.checkAuth, () => console.log('logged in'))
         })
         .catch(err => console.error(err))
 

@@ -2,16 +2,15 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../contexts/AuthProvider';
 
-const RequireAuth =(props) => {
+const RequiredOut =(props) => {
     const { children } = props;
     let auth = useAuth();
     let location = useLocation();
-    console.log('auth users', auth)
-    if (!auth.user.loggedIn) {
-      return <Navigate to="/login" state={{ from: location }} />;
+    if (auth.user.loggedIn) {
+      return <Navigate to="/messages" state={{ from: location.pathname }} />;
     }
   
     return children;
 }
 
-export default RequireAuth;
+export default RequiredOut;
