@@ -1,70 +1,33 @@
 import { useEffect, useState } from "react";
-import {ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, gql, useQuery} from "@apollo/client"
 
-import Login from "./components/Login";
-
-
-
-
+import GlobalStyle from "./styles/GlobalStyles";
+import Login from "./components/forms/Login";
+import Register from "./components/forms/Register";
 function App() {
 
-  const client = new ApolloClient({
-    link: createHttpLink({
-      uri: 'http://localhost:8090/graphql',
-      credentials: 'include'
-    }),
-    cache: new InMemoryCache()
-  })
   const [ credentials, setCredentials ] = useState({
     isLoggedIn: false,
-    bearer: ""
+    username: "",
+    email: ""
   });
 
-  useEffect(() => {
-    client.query({
-      query: gql`
-        query {
-          login(username: "jbain", password: "123") {
-            token
-          }
-        }
-      `
-    })
-    .then(res => {
-      console.log(res)
-    })
-    .catch(err => console.log(err))
-  }, [client])
-
-
- 
 
   const login = (data) => {
-    localStorage.setItem("token", data.token)
+    console.log(data)
     setCredentials({
       isLoggedIn: true,
-      bearer: data.token
+      username: data.username,
+      email: data.email
     })
   }
-  
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log(token)
-    if(token){
-      setCredentials({
-        isLoggedIn: false,
-        bearer: token
-      })
-    }
-  
-  }, [])
+
   return (
-    <ApolloProvider client={client}>
     <div className="App">
-      <Login login={login}/>
+      <GlobalStyle />
+      {/* <Login login={login}/> */}
+      <Register />
 
     </div>
-    </ApolloProvider>
   );
 }
 

@@ -30,8 +30,8 @@ module.exports =  gql`
     }
 
     type AuthData {
-        userId: String!
-        token: String!
+        username: String!
+        email: String!
         tokenExpiration: Int!
     }
 

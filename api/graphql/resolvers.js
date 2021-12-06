@@ -33,11 +33,13 @@ const resolvers = {
             });
 
 
-            res.cookie('something', token, {
-                secure: false
+            res.cookie('token', token, {
+                secure: false,
+                httpOnly: true
             });
-            console.log('res', res)
-            return { userId: foundUser.id, token: token, tokenExpiration: numHours}
+
+
+            return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours}
 
         }
     },
