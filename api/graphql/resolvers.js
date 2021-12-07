@@ -42,6 +42,7 @@ const resolvers = {
             return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours}
         },
         checkAuth: async (_, __, { dataSources: { users }, req}) => {
+            console.log("maybe we are here")
             if (!req.userId){
                 throw new Error("user is not logged in");
             }

@@ -1,11 +1,12 @@
 import { createContext, useState, useContext, useEffect } from "react";
+import {useQuery, gql} from '@apollo/client';
 
 import { makeHttpRequest } from '../adapters/requests';
 
 const AuthContext = createContext();
 
 const AuthProvider = (props) => {
-    const { children } = props;
+    const { children, client } = props;
     const [ user, setUser ] = useState({
         loggedIn: false,
         username: "",
@@ -13,35 +14,83 @@ const AuthProvider = (props) => {
         loading: true
     });
 
+
+
+
     useEffect(() => {
-         const requestBody = {
-            query: `
-                query {
-                    checkAuth {
-                        username
-                        email
-                    }
-                }
-            `
-         }
+        const requestBody = gql`
+        query {
+            checkAuth {
+                username
+                email
+            }
+        }
+    `;
 
-        makeHttpRequest(requestBody)
+        client.query({query: requestBody})
             .then(res => {
-                if(res.errors) {
-                    return console.log(res.errors)
+                if(res.error){
+                    setUser( prev => ({
+                        ...prev,
+                        loading: false
+                    }))
+                    return
                 }
+                signIn(res.data.checkAuth)
 
-               signIn(res.data.checkAuth, () => console.log('signed in'));
             })
             .catch(err => {
-               console.error(err)
-               setUser(prev => ({
-                  ...prev,
-                  loading: false
-               }))
+                setUser(prev => ({
+                    ...prev,
+                    loading: false
+                }))
             })
+    }, [client])
 
-    }, [])
+    useEffect(() => {
+        console.log("client", client)
+        const something = client.subscribe({query: gql`
+            subscription {
+                newMessage(conversationId: "61aa52764dd2f2fa797d5f3b") {
+                    _id
+                    body
+                }
+            }
+        `})
+
+        console.log(something)
+    }, [client])
+
+
+    // useEffect(() => {
+    //      const requestBody = {
+    //         query: `
+    //             query {
+    //                 checkAuth {
+    //                     username
+    //                     email
+    //                 }
+    //             }
+    //         `
+    //      }
+
+    //     makeHttpRequest(requestBody)
+    //         .then(res => {
+    //             if(res.errors) {
+    //                 return console.log(res.errors)
+    //             }
+
+    //            signIn(res.data.checkAuth, () => console.log('signed in'));
+    //         })
+    //         .catch(err => {
+    //            console.error(err)
+    //            setUser(prev => ({
+    //               ...prev,
+    //               loading: false
+    //            }))
+    //         })
+
+    // }, [])
 
     const signIn = (userData, callback) => {
         setUser({
@@ -64,7 +113,7 @@ const AuthProvider = (props) => {
         callback()
     }
 
-    const value = { user, signIn, signOut };
+    const value = { user, signIn, signOut, client };
 
     return (
         <AuthContext.Provider value={value}>

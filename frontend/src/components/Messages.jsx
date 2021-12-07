@@ -5,19 +5,19 @@ import { makeHttpRequest } from "../adapters/requests";
 
 const Messages = (props) => {
 
-   const GET_MESSAGES = gql`
-   query {
-      messages(conversationId: "61aa52764dd2f2fa797d5f3b") {
-         _id
-         body  
-      }
-   }
-   `;
+   // const GET_MESSAGES = gql`
+   // query {
+   //    messages(conversationId: "61aa52764dd2f2fa797d5f3b") {
+   //       _id
+   //       body  
+   //    }
+   // }
+   // `;
 
-   const { loading, error, data } = useQuery(GET_MESSAGES);
+   // const { loading, error, data } = useQuery(GET_MESSAGES);
 
-   console.log('data', data)
-   console.log('errr', error)
+   // console.log('data', data)
+   // console.log('errr', error)
 
    //  useEffect(() => {
    //      const requestBody = {
