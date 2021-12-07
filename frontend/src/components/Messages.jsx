@@ -17,14 +17,18 @@ const Messages = (props) => {
             `
           }
           makeHttpRequest(requestBody)
-          .then(res => {
-            if(!res.data) {
-              return console.log(res.errors)
-            }
-          })
-          .catch(err => console.error(err))
+            .then(res => {
+                if(res.errors) {
+                return console.log(res.errors)
+                }
+                console.log('messages data', res)
+                setMessages(res.data.messages);
+            })
+            .catch(err => console.error(err))
 
     }, [])
+
+
 
     const [ messages, setMessages ] = useState([])
 
