@@ -10,6 +10,7 @@ const resolvers = {
             return await users.Model.find();
         },
         messages: async (_, { conversationId }, { dataSources: { messages }, req }) => {
+            console.log('messages req.isAuth', req.isAuth)
             if (!req.isAuth) throw new Error("you don't have access to do that");
             const result = await messages.getMessagesByConversationId(conversationId)
             return result;
@@ -41,7 +42,6 @@ const resolvers = {
             return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours}
         },
         checkAuth: async (_, __, { dataSources: { users }, req}) => {
-            console.log('req', req)
             if (!req.userId){
                 throw new Error("user is not logged in");
             }
