@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import {useQuery, gql} from '@apollo/client';
+import {useQuery, gql, useSubscription} from '@apollo/client';
 
 import { makeHttpRequest } from '../adapters/requests';
 
@@ -47,19 +47,17 @@ const AuthProvider = (props) => {
             })
     }, [client])
 
-    useEffect(() => {
-        console.log("client", client)
-        const something = client.subscribe({query: gql`
-            subscription {
-                newMessage(conversationId: "61aa52764dd2f2fa797d5f3b") {
+        const sub = gql`
+            subscription OnMessageAdded($conversationId: ID!) {
+                newMessage(conversationId: $conversationId) {
                     _id
                     body
                 }
             }
-        `})
+        `
 
-        console.log(something)
-    }, [client])
+        const stuff = useSubscription(sub, { variables: { conversationId: "61aa52764dd2f2fa797d5f3b" } });
+        console.log(stuff)
 
 
     // useEffect(() => {
