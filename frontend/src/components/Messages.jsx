@@ -21,7 +21,6 @@ const Messages = (props) => {
             if(!res.data) {
               return console.log(res.errors)
             }
-            console.log(res)
           })
           .catch(err => console.error(err))
 

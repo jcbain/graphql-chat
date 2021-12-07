@@ -7,7 +7,6 @@ const pubsub = new PubSub();
 const resolvers = {
     Query: {
         users: async (_,__, {dataSources: { users }, req }) => {
-            console.log(req.isAuth)
             return await users.Model.find();
         },
         messages: async (_, { conversationId }, { dataSources: { messages }, req }) => {

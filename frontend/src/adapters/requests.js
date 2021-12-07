@@ -8,9 +8,7 @@ export const makeHttpRequest = (requestBody) => {
         credentials: "include"
       })
       .then(res => {
-        console.log(res)
         if(res.status !== 200) {
-          console.log(res)
           return;
         }
         return res.json()

@@ -41,7 +41,7 @@ const Login = (props) => {
       console.log(res)
       setPassword("")
       setUsername("")
-      auth.signIn(res.data.login, () => navigate(from, { replace: true }))
+      auth.signIn(res.data.login, () => navigate(from))
     })
     .catch(err => console.error(err))
 

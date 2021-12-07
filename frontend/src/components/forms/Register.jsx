@@ -35,15 +35,12 @@ const Register = (props) => {
       credentials: "include"
     })
     .then(res => {
-      console.log(res)
       if(res.status !== 200) {
-        console.log(res)
         return;
       }
       return res.json()
     })
     .then(res => {
-      console.log(res)
       setPassword("")
       setUsername("")
       setPasswordCheck("")

@@ -1,7 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 
 import { makeHttpRequest } from '../adapters/requests';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -10,11 +9,12 @@ const AuthProvider = (props) => {
     const [ user, setUser ] = useState({
         loggedIn: false,
         username: "",
-        email: ""
+        email: "",
+        loading: true
     });
 
     useEffect(() => {
-        const requestBody = {
+         const requestBody = {
             query: `
                 query {
                     checkAuth {
@@ -23,17 +23,23 @@ const AuthProvider = (props) => {
                     }
                 }
             `
-          }
+         }
 
         makeHttpRequest(requestBody)
-        .then(res => {
-            if(!res.data) {
-                return console.log(res.errors)
-            }
-            console.log(res)
-            signIn(res.data.checkAuth, () => console.log('logged in'))
-        })
-        .catch(err => console.error(err))
+            .then(res => {
+                if(res.errors) {
+                    return console.log(res.errors)
+                }
+
+               signIn(res.data.checkAuth, () => console.log('signed in'));
+            })
+            .catch(err => {
+               console.error(err)
+               setUser(prev => ({
+                  ...prev,
+                  loading: false
+               }))
+            })
 
     }, [])
 
@@ -41,7 +47,8 @@ const AuthProvider = (props) => {
         setUser({
             loggedIn: true,
             username: userData.username,
-            email: userData.email
+            email: userData.email, 
+            loading: false
         });
 
         callback();
@@ -51,12 +58,13 @@ const AuthProvider = (props) => {
         setUser({
             loggedIn: false,
             username: "",
-            email: ""
+            email: "", 
+            loading: false
         });
         callback()
     }
 
-    const value = { user, signIn, signOut}
+    const value = { user, signIn, signOut };
 
     return (
         <AuthContext.Provider value={value}>

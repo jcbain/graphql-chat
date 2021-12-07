@@ -1,32 +1,22 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
-import { makeHttpRequest } from './adapters/requests';
-import AuthProvider, { useAuth } from "./contexts/AuthProvider";
 import GlobalStyle from "./styles/GlobalStyles";
 import RequireAuth from "./components/RequireAuth";
-import RequiredOut from './components/RequiredOut';
 import Login from "./components/forms/Login";
 import Register from "./components/forms/Register";
 import Messages from './components/Messages';
+import Home from './components/Home';
 
 
 function App() {
-  const auth = useAuth();
-
-
-
 
   return (
-    // <AuthProvider>
       <div className="App">
         <GlobalStyle />
           <Routes>
-            <Route path="/" element={<div>this is a public page</div>}/>
+            <Route path="/" element={<Home />}/>
             <Route path="/login" element={
-              <RequiredOut>
-                <Login />
-              </RequiredOut>
+              <Login />
             }/>
             <Route path="/register" element={<Register />}/>
             <Route
@@ -48,7 +38,6 @@ function App() {
           </Routes>
 
       </div>
-    // </AuthProvider>
   );
 }
 

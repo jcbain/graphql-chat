@@ -4,9 +4,13 @@ import { useAuth } from '../contexts/AuthProvider';
 
 const RequireAuth =(props) => {
     const { children } = props;
-    let auth = useAuth();
-    let location = useLocation();
-    console.log('auth users', auth)
+    const auth = useAuth();
+    const location = useLocation();
+
+    if(auth.user.loading) {
+      return <p>loading...</p>
+    }
+
     if (!auth.user.loggedIn) {
       return <Navigate to="/login" state={{ from: location }} />;
     }
