@@ -30,6 +30,7 @@ module.exports =  gql`
     }
 
     type AuthData {
+        loggedIn: Boolean!
         username: String!
         email: String!
         tokenExpiration: Int!

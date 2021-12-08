@@ -36,6 +36,14 @@ const splitLink = split(({ query }) => {
   httpLink
 )
 
+const cache = new InMemoryCache()
+const defaults = {
+  loggedIn: {
+    value: false,
+    __typename: "LoggedIn"
+  }
+}
+
 const client = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache(),

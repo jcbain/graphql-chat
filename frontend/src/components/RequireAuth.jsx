@@ -9,11 +9,11 @@ const RequireAuth =(props) => {
 
     console.log("auth", auth)
 
-    if(auth.user.loading) {
+    if(auth.loading) {
       return <p>loading...</p>
     }
 
-    if (!auth.user.loggedIn) {
+    if (!auth.loggedIn) {
       return <Navigate to="/login" state={{ from: location }} />;
     }
   

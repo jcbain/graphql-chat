@@ -1,6 +1,7 @@
 const { PubSub, withFilter } = require("graphql-subscriptions");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { runHttpQuery } = require("apollo-server-core");
 
 const pubsub = new PubSub();
 
@@ -19,8 +20,16 @@ const resolvers = {
             if (!req.isAuth) throw new Error("you don't have access to do that");
             return await conversations.Model.find();
         },
-        login: async (_, {username, password}, { dataSources: { users }, res}) => {
+        login: async (_, {username, password}, { dataSources: { users }, req, res}) => {
             const numHours = 2;
+            
+            if(req.isAuth) {
+                const userId = req.userId;
+                const foundUser = await users.getUser(userId);
+                return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true }
+            }
+
+         
             if (!username || !password ) throw new Error("username or email can't be blank");
             const foundUser = await users.getUserByUsername(username);
             if (!foundUser) throw new Error("no user found with that username");
@@ -39,7 +48,7 @@ const resolvers = {
             });
 
 
-            return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours}
+            return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true}
         },
         checkAuth: async (_, __, { dataSources: { users }, req}) => {
             console.log("maybe we are here")
@@ -52,7 +61,7 @@ const resolvers = {
                 throw new Error("you are not logged in");
             }
             
-            return {username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: 2}
+            return {username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: 2, loggedIn: true}
 
         }
     },
