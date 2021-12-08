@@ -22,8 +22,8 @@ const resolvers = {
         },
         login: async (_, {username, password}, { dataSources: { users }, req, res}) => {
             const numHours = 2;
-            
-            if(req.isAuth) {
+            console.log('here', username, password)
+            if(req.isAuth && (!password || !username)) {
                 const userId = req.userId;
                 const foundUser = await users.getUser(userId);
                 return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true }

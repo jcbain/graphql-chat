@@ -5,8 +5,8 @@ import { makeHttpRequest } from '../adapters/requests';
 
 
 const GET_AUTH = gql`
-    query {
-        checkAuth {
+    query Login($username: String, $password: String){
+        login(username: $username, password: $password) {
             loggedIn
             username
             email
@@ -17,11 +17,13 @@ const GET_AUTH = gql`
 const AuthContext = createContext();
 
 const AuthProvider = (props) => {
-    const { children, client } = props;
-    const { loading, error, data } = useQuery(GET_AUTH);
+    const { children } = props;
+    const { loading, error, data, refetch, client } = useQuery(GET_AUTH, {variables: {username: "", password: ""}});
 
     console.log('stuff', loading)
     console.log('stuff', data)
+
+    // console.log('client', client)
     
     // const [ user, setUser ] = useState({
     //     loggedIn: false,
@@ -77,7 +79,23 @@ const AuthProvider = (props) => {
         // console.log(stuff)
 
 
-    const signIn = (userData, callback) => {
+    const signIn = (username, password, callback) => {
+        refetch({username: username, password: password})
+        console.log("client", client)
+        callback();
+        // console.log('hellow')
+        // console.log(username, password)
+        // client.resetStore().then(() => {
+        //     return client.query({ query: GET_AUTH, variables: {username, password}})
+        // })
+        // .then((res) => {
+        //     console.log('res', res);
+        //     callback();
+        // })
+        // .catch(err => {
+        //     console.log(err)
+        // })
+        
         // setUser({
         //     loggedIn: true,
         //     username: userData.username,
@@ -85,7 +103,7 @@ const AuthProvider = (props) => {
         //     loading: false
         // });
 
-        callback();
+        
     }
 
     const signOut = (callback) =>{
@@ -98,7 +116,7 @@ const AuthProvider = (props) => {
         callback()
     }
 
-    const value = { loggedIn: data?.checkAuth?.loggedIn, loading: loading, signIn, signOut, client };
+    const value = { loggedIn: data?.login?.loggedIn, loading: loading, signIn, signOut };
 
     return (
         <AuthContext.Provider value={value}>

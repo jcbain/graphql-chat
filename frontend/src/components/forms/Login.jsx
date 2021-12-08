@@ -19,31 +19,33 @@ const Login = (props) => {
     event.preventDefault();
     if (!password || !username) return;
 
-    const requestBody = gql`
-        query {
-          login(username: "${username}", password: "${password}") {
-            email
-            username
-            tokenExpiration
-          }
-        }
-      `
+    auth.signIn(username, password, () => navigate(from))
 
-    auth.client.query({query: requestBody})
-    .then(res => {
-      if(res.error){
-        auth.signOut(() => console.log('logged out'))
-        return console.log(res.error)
+    // const requestBody = gql`
+    //     query {
+    //       login(username: "${username}", password: "${password}") {
+    //         email
+    //         username
+    //         tokenExpiration
+    //       }
+    //     }
+    //   `
+
+    // auth.client.query({query: requestBody})
+    // .then(res => {
+    //   if(res.error){
+    //     auth.signOut(() => console.log('logged out'))
+    //     return console.log(res.error)
   
-      }
-      setPassword("")
-      setUsername("")
-      auth.signIn(res.data.login, () => navigate(from))
+    //   }
+    //   setPassword("")
+    //   setUsername("")
+    //   auth.signIn(res.data.login, () => navigate(from))
 
-    })
-    .catch(err => {
-      console.error(err)
-    })
+    // })
+    // .catch(err => {
+    //   console.error(err)
+    // })
 
   }
 
