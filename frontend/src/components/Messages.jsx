@@ -1,62 +1,46 @@
 import { useQuery, useSubscription } from '@apollo/client';
 
-import { GET_MESSAGES } from '../graphql/queries'
+import { GET_MESSAGES } from '../graphql/queries';
+import { MESSAGE_SUBSCRIPTION } from '../graphql/subscriptions'
 
 const Messages = (props) => {
-
-   // const GET_MESSAGES = gql`
-   // query {
-   //    messages(conversationId: "61aa52764dd2f2fa797d5f3b") {
-   //       _id
-   //       body  
-   //    }
-   // }
-   // `;
 
    const { loading, error, data } = useQuery(GET_MESSAGES, { variables: {conversationId: "61aa52764dd2f2fa797d5f3b"}});
    console.log(data)
    console.log(error)
 
-   // console.log('data', data)
-   // console.log('errr', error)
+   const sub = useSubscription(MESSAGE_SUBSCRIPTION, { 
+      variables: {conversationId: "61aa52764dd2f2fa797d5f3b"},
+      // onSubscriptionData: ({ client: { cache }}) => {
+      //    const {messages} = cache.readQuery({
+      //       query: GET_MESSAGES,
+      //       variables: {conversationId: "61aa52764dd2f2fa797d5f3b"}
+      //     });
 
-   //  useEffect(() => {
-   //      const requestBody = {
-   //          query: `
-   //              query {
-   //                  messages(conversationId: "61aa52764dd2f2fa797d5f3b") {
-   //                      _id
-   //                      body
-            
-   //                  }
-   //              }
-   //          `
-   //        }
-   //        makeHttpRequest(requestBody)
-   //          .then(res => {
-   //              if(res.errors) {
-   //              return console.log(res.errors)
-   //              }
-   //              console.log('messages data', res)
-   //              setMessages(res.data.messages);
-   //          })
-   //          .catch(err => console.error(err))
+      //     cache.writeQuery({
+      //       query: GET_MESSAGES,
+      //       variables: {conversationId: "61aa52764dd2f2fa797d5f3b"},
+      //       data: {
+      //         messages: [
+      //            ...messages,
+      //           {...sub.data.newMessage}
+      //         ]
+      //         }
+      //       }
+      //     );
+      // },
+   });
+   console.log('sub', sub)
 
-   //  }, [])
-
-
-
-   //  const [ messages, setMessages ] = useState([])
-
-   //  const bubbles = messages.map((message) => {
-   //      return (
-   //          <p key={message._id}>{message.body}</p>
-   //      )
-   //  })
+    const bubbles = data?.messages.map((message) => {
+        return (
+            <p key={message._id}>{message.body}</p>
+        )
+    })
 
     return (
         <div>
-            {/* {bubbles} */}
+            {bubbles}
         </div>
     )
 };

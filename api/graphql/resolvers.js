@@ -126,8 +126,11 @@ const resolvers = {
                 const conversation = await conversations.getConversationById(conversationId);
                 conversation.messages.push(newMessage);
                 await conversation.save();
-                pubsub.publish("NEW_MESSAGE", { newMessage:  newMessage});
-                return {...result._doc, conversation: conversation, sender: await users.getUser(result._doc.sender), receiver: await users.getUser(result._doc.receiver)}
+                console.log(conversation)
+                const returnResult = {...result._doc, conversation: conversation._doc, sender: await users.getUser(result._doc.sender), receiver: await users.getUser(result._doc.receiver)}
+                console.log('returnResult', returnResult)
+                pubsub.publish("NEW_MESSAGE", {newMessage: returnResult});
+                return returnResult;
 
             } catch (err) {
                 throw err;
@@ -140,7 +143,8 @@ const resolvers = {
             subscribe: withFilter(
                 () => pubsub.asyncIterator(["NEW_MESSAGE"]),
                 (payload, vars, context ) => {
-                    return (payload.newMessage.conversation.toString() === vars.conversationId );
+                    console.log('payload', payload)
+                    return (payload.newMessage.conversation._id.toString() === vars.conversationId ) || {};
                 }
             )
         }
