@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
-import { useSubscription, gql, useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 
-import { makeHttpRequest } from "../adapters/requests";
+import { GET_MESSAGES } from '../graphql/queries'
 
 const Messages = (props) => {
 
@@ -14,7 +13,9 @@ const Messages = (props) => {
    // }
    // `;
 
-   // const { loading, error, data } = useQuery(GET_MESSAGES);
+   const { loading, error, data } = useQuery(GET_MESSAGES, { variables: {conversationId: "61aa52764dd2f2fa797d5f3b"}});
+   console.log(data)
+   console.log(error)
 
    // console.log('data', data)
    // console.log('errr', error)
@@ -45,17 +46,17 @@ const Messages = (props) => {
 
 
 
-    const [ messages, setMessages ] = useState([])
+   //  const [ messages, setMessages ] = useState([])
 
-    const bubbles = messages.map((message) => {
-        return (
-            <p key={message._id}>{message.body}</p>
-        )
-    })
+   //  const bubbles = messages.map((message) => {
+   //      return (
+   //          <p key={message._id}>{message.body}</p>
+   //      )
+   //  })
 
     return (
         <div>
-            {bubbles}
+            {/* {bubbles} */}
         </div>
     )
 };

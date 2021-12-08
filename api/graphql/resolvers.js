@@ -10,10 +10,16 @@ const resolvers = {
         users: async (_,__, {dataSources: { users }, req }) => {
             return await users.Model.find();
         },
-        messages: async (_, { conversationId }, { dataSources: { messages }, req }) => {
+        messages: async (_, { conversationId }, { dataSources: { messages, users }, req }) => {
             console.log('messages req.isAuth', req.isAuth)
             if (!req.isAuth) throw new Error("you don't have access to do that");
-            const result = await messages.getMessagesByConversationId(conversationId)
+            const foundMessages = await messages.getMessagesByConversationId(conversationId);
+            const result = foundMessages.map(message => {
+                return {...message._doc, 
+                    sender: users.getUser(message._doc.sender), 
+                    receiver:users.getUser(message._doc.receiver) }
+            })
+            console.log(result)
             return result;
         },
         conversations: async (_, __, {dataSources: { conversations }, req }) => {
