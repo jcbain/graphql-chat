@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { useMutation } from '@apollo/client';
+
+import { CREATE_USER } from '../../graphql/mutations';
 import { Container, Form, Title, Input, Button } from './styles';
+
+
 
 const Register = (props) => {
   const [ username, setUsername ] = useState("");
   const [ email, setEmail ] = useState("")
   const [ password, setPassword ] = useState("");
   const [ passwordCheck, setPasswordCheck ] = useState("")
+
+  const [createUser, {error, loading}] = useMutation(CREATE_USER);
 
   
   const handleSubmit = (event) => {
@@ -14,40 +21,11 @@ const Register = (props) => {
 
     if (password !== passwordCheck) return;
 
-
-    const requestBody = {
-      query: `
-        mutation {
-          createUser(userInput: {username: "${username}", email: "${email}", password: "${password}"}) {
-            email
-            username
-          }
-        }
-      `
-    };
-
-    fetch('/graphql', {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: "include"
-    })
-    .then(res => {
-      if(res.status !== 200) {
-        return;
-      }
-      return res.json()
-    })
-    .then(res => {
-      setPassword("")
-      setUsername("")
-      setPasswordCheck("")
-      setEmail("")
-    })
-    .catch(err => console.error(err))
-
+    createUser({variables: {username, email, password}})
+    setPassword("")
+    setUsername("")
+    setPasswordCheck("")
+    setEmail("")
   }
 
   return (
