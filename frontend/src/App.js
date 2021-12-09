@@ -6,6 +6,7 @@ import Login from "./components/forms/Login";
 import Register from "./components/forms/Register";
 import Messages from './components/Messages';
 import Home from './components/Home';
+import MessagePageWithData from './components/MessagePageWithData';
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
               path="/messages"
               element={
                 <RequireAuth>
-                  <Messages />
+                  <MessagePageWithData />
                 </RequireAuth>
               }
             />

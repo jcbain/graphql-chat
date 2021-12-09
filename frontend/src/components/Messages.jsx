@@ -1,36 +1,15 @@
-import { useQuery, useSubscription } from '@apollo/client';
-
-import { GET_MESSAGES } from '../graphql/queries';
-import { MESSAGE_SUBSCRIPTION } from '../graphql/subscriptions'
+import { useEffect } from 'react';
 
 const Messages = (props) => {
+   const { data, loading, error, subscribeToNewMessages } = props;
 
-   const { loading, error, data } = useQuery(GET_MESSAGES, { variables: {conversationId: "61aa52764dd2f2fa797d5f3b"}});
-   console.log(data)
-   console.log(error)
 
-   const sub = useSubscription(MESSAGE_SUBSCRIPTION, { 
-      variables: {conversationId: "61aa52764dd2f2fa797d5f3b"},
-      // onSubscriptionData: ({ client: { cache }}) => {
-      //    const {messages} = cache.readQuery({
-      //       query: GET_MESSAGES,
-      //       variables: {conversationId: "61aa52764dd2f2fa797d5f3b"}
-      //     });
+   useEffect(() => {
+      const unsub = subscribeToNewMessages();
+      return () => unsub()
 
-      //     cache.writeQuery({
-      //       query: GET_MESSAGES,
-      //       variables: {conversationId: "61aa52764dd2f2fa797d5f3b"},
-      //       data: {
-      //         messages: [
-      //            ...messages,
-      //           {...sub.data.newMessage}
-      //         ]
-      //         }
-      //       }
-      //     );
-      // },
-   });
-   console.log('sub', sub)
+   }, [subscribeToNewMessages])
+
 
     const bubbles = data?.messages.map((message) => {
         return (
@@ -40,7 +19,7 @@ const Messages = (props) => {
 
     return (
         <div>
-            {bubbles}
+            {!loading && bubbles}
         </div>
     )
 };
