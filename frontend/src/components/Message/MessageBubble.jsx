@@ -1,11 +1,12 @@
 import styled, { css } from 'styled-components';
+// import { Wrapper as Parent } from './index';
 
 const mineCss = css`
    padding: 5px 10px 5px 15px;
    border-bottom-left-radius: 5px;
    border-bottom-right-radius: 0px;
    color: ${props => props.theme.primaryMessageTextColor};
-   box-shadow: -8.0px 16.0px 16.0px hsl(0deg 0% 0% / 0.15);
+   box-shadow: -4.0px 8.0px 16.0px hsl(0deg 0% 0% / 0.15);
 `
 
 const Wrapper = styled.article`
@@ -17,7 +18,8 @@ const Wrapper = styled.article`
    border-bottom-left-radius: 0px;
    width: fit-content;
    font-family: 'Readex Pro';
-   box-shadow: 8.0px 16.0px 16.0px hsl(0deg 0% 0% / 0.15);
+   box-shadow: 4.0px 8.0px 16.0px hsl(0deg 0% 0% / 0.15);
+   margin-top: 7px;
    ${props => props.mine && mineCss};
 `;
 

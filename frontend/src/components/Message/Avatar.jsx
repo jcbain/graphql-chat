@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 const mineCss = css`
    background-color: ${props => props.theme.primaryMessageTextColor};
+   box-shadow: -4.0px 8.0px 16.0px hsl(0deg 0% 0% / 0.15);
 `
 
 const Wrapper = styled.div`
@@ -13,6 +14,7 @@ const Wrapper = styled.div`
    line-height: 40px;
    text-align: center;
    font-family: 'Readex Pro';
+   box-shadow: 4.0px 8.0px 16.0px hsl(0deg 0% 0% / 0.15);
    ${props => props.mine && mineCss};
 `
 

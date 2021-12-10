@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { GET_MESSAGES } from '../graphql/queries';
 import { MESSAGE_SUBSCRIPTION } from '../graphql/subscriptions'
-import Messages from './Messages';
+import OldMessages from './Messages';
 
 const MessagePageWithData = (props) => {
    const { subscribeToMore, data, loading, error } = useQuery(
@@ -11,7 +11,7 @@ const MessagePageWithData = (props) => {
 
     return (
 
-      <Messages data={data} 
+      <OldMessages data={data} 
          loading={loading} 
          error={error}
          subscribeToNewMessages={() =>
