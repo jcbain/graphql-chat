@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { PaperAirplane } from '@styled-icons/heroicons-outline/PaperAirplane'
 
 const Wrapper = styled.div`
   width: 100%;
-  border: 2px solid peru;
+  /* border: 2px solid peru; */
   font-family: 'Readex Pro';
 
 `
@@ -13,21 +14,18 @@ const Form = styled.form`
   flex-direction: column;
   width: 100%;
   display: flex;
-  /* flex-direction: column-reverse; */
-  /* display: relative; */
-  border: 2px solid salmon;
+  /* border: 2px solid salmon; */
 `
-
 
 
 const SpanDiv = styled.div`
   padding: 10px;
   min-height: 30vh;
-  border: 2px dashed green;
+  /* border: 2px dashed green; */
   display: flex;
   align-items: flex-end;;
-
-`
+  
+  `
 const Span = styled.span`
   width: 100%;
   word-wrap: wrap;
@@ -35,10 +33,6 @@ const Span = styled.span`
   color: ${props => props.theme.primaryMessageTextColor};
   border: 2px solid ${props => props.theme.mainOutlineColor};
   border-radius: 4px;
-  /* max-width: 400px; */
-  /* vertical-align: bottom; */
-  /* position: absolute; */
-  /* bottom: 10px; */
   padding: 4px 8px;
   font-family: 'Readex Pro';
   caret-color: ${props => props.theme.mainOutlineColor};
@@ -46,17 +40,22 @@ const Span = styled.span`
 `
 
 const ButtonDiv = styled.div`
-  border: 2px dashed purple;
+  /* border: 2px dashed purple; */
+  padding: 10px;
 `
+
 
 const Button = styled.button`
-  padding: 4px 8px;
+  padding: 4px 12px;
   background-color: ${props => props.theme.primaryMessageTextColor};
-  border: 2px solid ${props => props.theme.mainOutlineColor}; 
+  border: 2px solid ${props => props.theme.primaryMessageTextColor}; 
   border-radius: 4px;
-  color: white;
 `
 
+const Airplane = styled(PaperAirplane)`
+  color: #fffff7;
+  width: 2rem;
+`
 const TextForm = (props) => {
   const [stuff, setStuff] = useState("")
   const handleChange = (event) => {
@@ -75,7 +74,9 @@ const TextForm = (props) => {
             />
         </SpanDiv>
         <ButtonDiv>
-          <Button>Send</Button>
+          <Button>
+            <Airplane />
+          </Button>
         </ButtonDiv>
       </Form>
     </Wrapper>
