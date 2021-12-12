@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { PaperAirplane } from '@styled-icons/heroicons-outline/PaperAirplane'
 
@@ -30,8 +30,8 @@ const SpanDiv = styled.div`
 const Span = styled.span`
   width: 100%;
   word-wrap: wrap;
-  outline: none;
-  color: ${props => props.theme.primaryMessageTextColor};
+  /* outline: none; */
+  color: ${props => props.theme.mainOutlineColor};
   border: 2px solid ${props => props.theme.mainOutlineColor};
   border-radius: 4px;
   padding: 4px 8px;
@@ -44,6 +44,10 @@ const Span = styled.span`
     color: lightgray;
     background-color: transparent;
 }
+&:focus{
+  outline: 2px solid #fc03a5;
+  /* border: 2px solid ${props => props.theme.primaryMessageTextColor}; */
+}
 `
 
 const ButtonDiv = styled.div`
@@ -55,8 +59,12 @@ const ButtonDiv = styled.div`
 const Button = styled.button`
   padding: 4px 12px;
   background-color: ${props => props.theme.primaryMessageTextColor};
-  border: 2px solid ${props => props.theme.primaryMessageTextColor}; 
+  /* background-color: #fffff7; */
+  border: 2px solid ${props => props.theme.mainOutlineColor}; 
   border-radius: 4px;
+  &:focus {
+    outline: 2px solid #fc03a5
+  }
 `
 
 const Airplane = styled(PaperAirplane)`
@@ -65,28 +73,34 @@ const Airplane = styled(PaperAirplane)`
 `
 const TextForm = (props) => {
   const [stuff, setStuff] = useState("")
-  const handleChange = (event) => {
-    event.preventDefault();
-    console.log('this is stuff', stuff)
-  }
-  const handleKeyUp = (event) => {
-    event.preventDefault();
- 
-    if (event.key === "Enter" && !event.shiftKey) {
-      console.log("hi there")
-    }
 
+  const submitData = useCallback(() => {
+    console.log('stuff is:', stuff);
+  }, [stuff])
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    submitData()
+  };
+
+  const handleFormKeyUp = (event) => {
+    event.preventDefault();
+    if (event.key === "Enter" && !event.shiftKey) {
+      submitData()
+    }
+  };
+
+  const handleInputKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+    }
   }
+
   return (
     <Wrapper>
-      <Form onSubmit={handleChange} onKeyUp={handleKeyUp}>
+      <Form onSubmit={handleFormSubmit} onKeyUp={handleFormKeyUp}>
         <SpanDiv>
-          <Span onKeyDown={event => {
-            if (event.key === "Enter" && !event.shiftKey) {
-              event.preventDefault();
-              console.log('did it')
-            }
-          }}
+          <Span onKeyDown={handleInputKeyDown}
           name="message" 
             type="text"
             value={stuff} 
