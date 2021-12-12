@@ -3,11 +3,12 @@ import { ThemeProvider } from "styled-components"
 
 import GlobalStyle from "../src/styles/GlobalStyles";
 
-const colors = ['#5900ff', '#00d985']
+const colors = ['#5900ff', '#00d985', '#303030']
 
 const theme = {
-   primaryMessageTextColor: '#00d985',
-   secondaryMessageTextColor: '#5900ff'
+   mainOutlineColor: colors[2],
+   primaryMessageTextColor: colors[1],
+   secondaryMessageTextColor: colors[0]
 };
 
 const ThemeDecorator = storyFn => (
