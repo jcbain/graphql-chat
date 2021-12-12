@@ -6,7 +6,8 @@ const Wrapper = styled.div`
   width: 100%;
   /* border: 2px solid peru; */
   font-family: 'Readex Pro';
-
+  max-width: 800px;
+  margin: 0 auto;
 `
 
 const Form = styled.form`
@@ -37,6 +38,12 @@ const Span = styled.span`
   font-family: 'Readex Pro';
   caret-color: ${props => props.theme.mainOutlineColor};
   display: block;
+  &[contenteditable][placeholder]:empty:before {
+    content: attr(placeholder);
+    position: absolute;
+    color: lightgray;
+    background-color: transparent;
+}
 `
 
 const ButtonDiv = styled.div`
@@ -60,21 +67,38 @@ const TextForm = (props) => {
   const [stuff, setStuff] = useState("")
   const handleChange = (event) => {
     event.preventDefault();
-    console.log(stuff)
+    console.log('this is stuff', stuff)
+  }
+  const handleKeyUp = (event) => {
+    event.preventDefault();
+ 
+    if (event.key === "Enter" && !event.shiftKey) {
+      console.log("hi there")
+    }
+
   }
   return (
     <Wrapper>
-      <Form onSubmit={handleChange}>
+      <Form onSubmit={handleChange} onKeyUp={handleKeyUp}>
         <SpanDiv>
-          <Span name="something" 
+          <Span onKeyDown={event => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              console.log('did it')
+            }
+          }}
+          name="message" 
             type="text"
             value={stuff} 
+            role="textbox"
             contentEditable={true}
-            onChange={event => setStuff(event.target.value)}
-            />
+            placeholder='write your message here...'
+            onInput={event => setStuff(event.currentTarget.textContent)}
+          >
+          </Span>
         </SpanDiv>
         <ButtonDiv>
-          <Button>
+          <Button type="submit">
             <Airplane />
           </Button>
         </ButtonDiv>

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import Message from '../Message';
+import TextForm from './TextForm';
 
 const Wrapper = styled.div`
    width: 100%;
@@ -39,6 +40,7 @@ const Messages = (props) => {
 
    return (
       <Wrapper>
+         <TextForm />
          <MessagesContainer>
             { messages }
          </MessagesContainer>
