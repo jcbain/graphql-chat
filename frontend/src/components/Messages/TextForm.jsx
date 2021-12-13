@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { PaperAirplane } from '@styled-icons/heroicons-outline/PaperAirplane'
 
@@ -31,7 +31,7 @@ const SpanDiv = styled.div`
   align-items: flex-end;;
   
   `
-const Span = styled.span`
+const Span = styled.textarea`
   width: 100%;
   word-wrap: wrap;
   /* outline: none; */
@@ -42,6 +42,10 @@ const Span = styled.span`
   font-family: 'Readex Pro';
   caret-color: ${props => props.theme.mainOutlineColor};
   display: block;
+  overflow: hidden;
+  resize: none;
+  height: 32px;
+  /* height: ${props => props.inputHeight}px; */
   &[contenteditable][placeholder]:empty:before {
     content: attr(placeholder);
     position: absolute;
@@ -76,11 +80,24 @@ const Airplane = styled(PaperAirplane)`
   width: 2rem;
 `
 const TextForm = (props) => {
+  const { createMessage } = props;
   const [stuff, setStuff] = useState("")
+  // const [inputHeight, setInputHeight] = useState(36)
+  const inputRef = useRef()
 
-  const submitData = useCallback(() => {
+  useEffect(() => {
+    if(inputRef.current){
+
+      inputRef.current.style.height = inputRef.current.scrollHeight + "px"
+      console.log(inputRef.current.style.height)
+    }
+  })
+
+  const submitData = () => {
     console.log('stuff is:', stuff);
-  }, [stuff])
+    createMessage(stuff, "61a9c64073f73821ad313bab")
+    setStuff("hi")
+  }
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -104,14 +121,18 @@ const TextForm = (props) => {
     <Wrapper>
       <Form onSubmit={handleFormSubmit} onKeyUp={handleFormKeyUp}>
         <SpanDiv>
-          <Span onKeyDown={handleInputKeyDown}
+          <Span 
+          // inputHeight={inputHeight}
+          ref={inputRef}
+          onKeyDown={handleInputKeyDown}
           name="message" 
             type="text"
             value={stuff} 
-            role="textbox"
-            contentEditable={true}
+            // contentEditable={true}
             placeholder='write your message here...'
-            onInput={event => setStuff(event.currentTarget.textContent)}
+            // onInput={event => setStuff(event.currentTarget.textContent)}
+            onChange={event => setStuff(event.target.value)}
+            // data-role="none"
           >
           </Span>
         </SpanDiv>

@@ -8,3 +8,18 @@ export const CREATE_USER = gql`
       }
    }
 `;
+
+export const CREATE_MESSAGE = gql`
+   mutation CreateMessage($body: String!, $receiverId: ID!, $conversationId: ID!){
+      createMessage(body: $body, receiverId: $receiverId, conversationId: $conversationId) {
+         _id
+        body
+        conversation {
+            _id
+        }
+        sender {
+            _id
+        }
+      }
+   }
+`;

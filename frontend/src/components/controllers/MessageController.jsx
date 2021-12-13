@@ -1,14 +1,27 @@
 import { useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation, gql } from '@apollo/client';
+
+import { useAuth } from '../../contexts/AuthProvider';
 import { GET_MESSAGES } from '../../graphql/queries';
 import { MESSAGE_SUBSCRIPTION } from '../../graphql/subscriptions';
+import { CREATE_MESSAGE } from '../../graphql/mutations';
 import Messages from '../Messages';
 
 const MessageController = (props) => {
+   const { username } = useAuth();
    const { subscribeToMore, data, loading, error } = useQuery(
       GET_MESSAGES,
       { variables: {conversationId: "61aa52764dd2f2fa797d5f3b"}}
    );
+
+
+   const [addMessage] = useMutation(CREATE_MESSAGE);
+
+   const createMessage = (body, receiverId ) => {
+      addMessage({ variables: { body, receiverId, conversationId: "61aa52764dd2f2fa797d5f3b" }})
+   } 
+
+   
 
    useEffect(() => {
       const subscribeToNewMessages = () =>
@@ -31,18 +44,15 @@ const MessageController = (props) => {
 
          return () => unsub();
          
-   }, [subscribeToMore])
-
-   
-
-   console.log(data)
+   }, [subscribeToMore]);
 
    return (
       <>
+         {error && <p>error</p>}
          {loading && <p>loading</p>}
-         {!loading && <Messages data={data.messages} username={"jbain"}/>}
+         {!loading && <Messages data={data.messages} username={username} createMessage={createMessage}/>}
       </>
-   )
+   );
 }
 
 export default MessageController;

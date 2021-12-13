@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router";
 
 import { useAuth } from "../../contexts/AuthProvider";
 import { Container, Form, Title, Input, Button } from './styles';
-import gql from "graphql-tag";
 
 const Login = (props) => {
   const [username, setUsername] = useState("");
@@ -20,32 +19,6 @@ const Login = (props) => {
     if (!password || !username) return;
 
     auth.signIn(username, password, () => navigate(from))
-
-    // const requestBody = gql`
-    //     query {
-    //       login(username: "${username}", password: "${password}") {
-    //         email
-    //         username
-    //         tokenExpiration
-    //       }
-    //     }
-    //   `
-
-    // auth.client.query({query: requestBody})
-    // .then(res => {
-    //   if(res.error){
-    //     auth.signOut(() => console.log('logged out'))
-    //     return console.log(res.error)
-  
-    //   }
-    //   setPassword("")
-    //   setUsername("")
-    //   auth.signIn(res.data.login, () => navigate(from))
-
-    // })
-    // .catch(err => {
-    //   console.error(err)
-    // })
 
   }
 

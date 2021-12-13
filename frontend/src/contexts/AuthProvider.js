@@ -3,8 +3,6 @@ import {useQuery } from '@apollo/client';
 
 import { GET_AUTH } from '../graphql/queries';
 
-
-
 const AuthContext = createContext();
 
 const AuthProvider = (props) => {
@@ -20,7 +18,7 @@ const AuthProvider = (props) => {
         callback()
     }
 
-    const value = { loggedIn: data?.login?.loggedIn, loading: loading, error, signIn, signOut };
+    const value = { loggedIn: data?.login?.loggedIn, username: data?.login?.username, loading, error, signIn, signOut };
 
     return (
         <AuthContext.Provider value={value}>

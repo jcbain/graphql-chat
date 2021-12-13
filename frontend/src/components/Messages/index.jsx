@@ -25,11 +25,11 @@ const MessagesContainer = styled.div`
 
 
 const Messages = (props) => {
-   const { data, username } = props;
+   const { data, username, createMessage } = props;
    const messages = data.map((message, i, arr) => {
       const text = message.body;
       const showAvatar = (i < arr.length - 1 && message.sender.username !== arr[i + 1].sender.username) || i === arr.length - 1;
-      i > 0 && console.log(message.sender.username, arr[i - 1].sender.username,showAvatar)
+      // i > 0 && console.log(message.sender.username, arr[i - 1].sender.username,showAvatar)
       const mine = message.sender.username === username;
       const initials = message.sender.username.substring(0, 2).toUpperCase();
       return (
@@ -39,7 +39,7 @@ const Messages = (props) => {
 
    return (
       <Wrapper>
-         <TextForm />
+         <TextForm createMessage={createMessage}/>
          <MessagesContainer>
             { messages }
          </MessagesContainer>
