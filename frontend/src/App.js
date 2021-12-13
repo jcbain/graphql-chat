@@ -5,7 +5,6 @@ import RequireAuth from "./components/RequireAuth";
 import Login from "./components/forms/Login";
 import Register from "./components/forms/Register";
 import Home from './components/Home';
-import MessagePageWithData from './components/MessagePageWithData';
 import MessageController from './components/controllers/MessageController';
 
 const colors = ['#5900ff', '#00d985', '#303030']
@@ -33,7 +32,6 @@ function App() {
               element={
                 <RequireAuth>
                   <MessageController />
-                  {/* <MessagePageWithData /> */}
                 </RequireAuth>
               }
             />

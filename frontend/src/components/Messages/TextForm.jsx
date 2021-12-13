@@ -6,15 +6,19 @@ const Wrapper = styled.div`
   width: 100%;
   /* border: 2px solid peru; */
   font-family: 'Readex Pro';
-  max-width: 800px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  position: fixed;
+  bottom: 0;
 `
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 800px;
   display: flex;
+  margin: 0 auto;
+
   /* border: 2px solid salmon; */
 `
 

@@ -40,7 +40,7 @@ const MessageController = (props) => {
    return (
       <>
          {loading && <p>loading</p>}
-         {!loading && <Messages data={data.messages} userId={"61a9c543e5d91654d245998c"}/>}
+         {!loading && <Messages data={data.messages} username={"jbain"}/>}
       </>
    )
 }
