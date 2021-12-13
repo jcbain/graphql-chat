@@ -26,7 +26,6 @@ const MessagesContainer = styled.div`
 
 const Messages = (props) => {
    const { data, userId } = props;
-
    const messages = data.map((message, i, arr) => {
       const text = message.body;
       const showAvatar = (i < arr.length - 1 && message.sender._id !== arr[i + 1].sender._id) || i === arr.length - 1;

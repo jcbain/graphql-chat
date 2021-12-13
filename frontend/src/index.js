@@ -12,6 +12,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App';
 import AuthProvider from './contexts/AuthProvider';
+import { ThemeProvider } from 'styled-components';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:8090/graphql',
@@ -36,13 +37,6 @@ const splitLink = split(({ query }) => {
   httpLink
 )
 
-const cache = new InMemoryCache()
-const defaults = {
-  loggedIn: {
-    value: false,
-    __typename: "LoggedIn"
-  }
-}
 
 const client = new ApolloClient({
   link: splitLink,

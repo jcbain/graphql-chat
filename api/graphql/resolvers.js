@@ -110,13 +110,14 @@ const resolvers = {
                 throw err;
             }
         },
-        createMessage: async (_, {body, receiverId, conversationId}, { dataSources: { messages, conversations, users } }) => {
+        createMessage: async (_, {body, receiverId, conversationId}, { dataSources: { messages, conversations, users }, req }) => {
+            if (!req.isAuth) throw new Error("you don't have access to do that");
 
             if (!body || !receiverId || !conversationId ) throw new Error("all message fields are required");
 
             const newMessage = new messages.Model({
                 body,
-                sender: "61a9c543e5d91654d245998c",
+                sender: req.userId,
                 receiver: receiverId,
                 conversation: conversationId
             });
