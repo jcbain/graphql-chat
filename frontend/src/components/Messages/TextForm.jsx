@@ -44,8 +44,7 @@ const Span = styled.textarea`
   display: block;
   overflow: hidden;
   resize: none;
-  height: 32px;
-  /* height: ${props => props.inputHeight}px; */
+  min-height: 38px;
   &[contenteditable][placeholder]:empty:before {
     content: attr(placeholder);
     position: absolute;
