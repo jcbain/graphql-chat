@@ -45,7 +45,8 @@ const Span = styled.textarea`
   overflow: hidden;
   resize: none;
   min-height: 38px;
-  &[contenteditable][placeholder]:empty:before {
+  height: 38px;
+  &[placeholder]:empty:before {
     content: attr(placeholder);
     position: absolute;
     color: lightgray;
@@ -53,12 +54,10 @@ const Span = styled.textarea`
 }
 &:focus{
   outline: 2px solid #fc03a5;
-  /* border: 2px solid ${props => props.theme.primaryMessageTextColor}; */
 }
 `
 
 const ButtonDiv = styled.div`
-  /* border: 2px dashed purple; */
   padding: 10px;
 `
 
@@ -66,7 +65,6 @@ const ButtonDiv = styled.div`
 const Button = styled.button`
   padding: 4px 12px;
   background-color: ${props => props.theme.primaryMessageTextColor};
-  /* background-color: #fffff7; */
   border: 2px solid ${props => props.theme.mainOutlineColor}; 
   border-radius: 4px;
   &:focus {
@@ -81,21 +79,21 @@ const Airplane = styled(PaperAirplane)`
 const TextForm = (props) => {
   const { createMessage } = props;
   const [stuff, setStuff] = useState("")
-  // const [inputHeight, setInputHeight] = useState(36)
   const inputRef = useRef()
 
   useEffect(() => {
     if(inputRef.current){
-
+      if(stuff === ""){
+        return inputRef.current.style.height = "38px"; 
+      }
       inputRef.current.style.height = inputRef.current.scrollHeight + "px"
-      console.log(inputRef.current.style.height)
     }
   })
 
   const submitData = () => {
-    console.log('stuff is:', stuff);
+    if(stuff === "") return;
     createMessage(stuff, "61a9c64073f73821ad313bab")
-    setStuff("hi")
+    setStuff("")
   }
 
   const handleFormSubmit = (event) => {
@@ -118,20 +116,18 @@ const TextForm = (props) => {
 
   return (
     <Wrapper>
-      <Form onSubmit={handleFormSubmit} onKeyUp={handleFormKeyUp}>
+      <Form onSubmit={handleFormSubmit} 
+        onKeyUp={handleFormKeyUp}
+        >
         <SpanDiv>
           <Span 
-          // inputHeight={inputHeight}
-          ref={inputRef}
-          onKeyDown={handleInputKeyDown}
-          name="message" 
+            ref={inputRef}
+            onKeyDown={handleInputKeyDown}
+            name="message" 
             type="text"
             value={stuff} 
-            // contentEditable={true}
             placeholder='write your message here...'
-            // onInput={event => setStuff(event.currentTarget.textContent)}
             onChange={event => setStuff(event.target.value)}
-            // data-role="none"
           >
           </Span>
         </SpanDiv>
