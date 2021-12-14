@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router";
 import { useAuth } from "../../contexts/AuthProvider";
 import { Container, Form, Title, Input, Button } from './styles';
 
+
+// try turning this into a higher order component to avoid rerender issue?
 const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -11,12 +13,16 @@ const Login = (props) => {
   const location = useLocation();
   const auth = useAuth();
 
+
   const from = location.state?.from?.pathname || "/";
 
+  console.log('whyyyy')
   
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!password || !username) return;
+
+    console.log('username, password', username, password)
 
     auth.signIn(username, password, () => navigate(from))
 

@@ -85,6 +85,7 @@ const httpServer = createServer(app);
         allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
         exposedHeaders: ["set-cookie"],
         methods: ['GET', 'POST', 'OPTIONS']
+        // methods: ["POST"]
     } });
 
     httpServer.listen(PORT, () => {

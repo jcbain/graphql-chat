@@ -11,7 +11,6 @@ const resolvers = {
             return await users.Model.find();
         },
         messages: async (_, { conversationId }, { dataSources: { messages, users }, req }) => {
-            console.log('messages req.isAuth', req.isAuth)
             if (!req.isAuth) throw new Error("you don't have access to do that");
             const foundMessages = await messages.getMessagesByConversationId(conversationId);
             const result = foundMessages.map(message => {
@@ -19,7 +18,6 @@ const resolvers = {
                     sender: users.getUser(message._doc.sender), 
                     receiver:users.getUser(message._doc.receiver) }
             })
-            console.log(result)
             return result;
         },
         conversations: async (_, __, {dataSources: { conversations }, req }) => {
@@ -28,15 +26,13 @@ const resolvers = {
         },
         login: async (_, {username, password}, { dataSources: { users }, req, res}) => {
             const numHours = 2;
-            console.log('here', username, password)
             if(req.isAuth && (!password || !username)) {
                 const userId = req.userId;
                 const foundUser = await users.getUser(userId);
                 return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true }
             }
 
-         
-            if (!username || !password ) throw new Error("username or email can't be blank");
+            if (!username || !password ) throw new Error("username or email can't be blanky");
             const foundUser = await users.getUserByUsername(username);
             if (!foundUser) throw new Error("no user found with that username");
             
@@ -57,7 +53,6 @@ const resolvers = {
             return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true}
         },
         checkAuth: async (_, __, { dataSources: { users }, req}) => {
-            console.log("maybe we are here")
             if (!req.userId){
                 throw new Error("user is not logged in");
             }
@@ -127,9 +122,7 @@ const resolvers = {
                 const conversation = await conversations.getConversationById(conversationId);
                 conversation.messages.push(newMessage);
                 await conversation.save();
-                console.log(conversation)
                 const returnResult = {...result._doc, conversation: conversation._doc, sender: await users.getUser(result._doc.sender), receiver: await users.getUser(result._doc.receiver)}
-                console.log('returnResult', returnResult)
                 pubsub.publish("NEW_MESSAGE", {newMessage: returnResult});
                 return returnResult;
 
@@ -144,7 +137,6 @@ const resolvers = {
             subscribe: withFilter(
                 () => pubsub.asyncIterator(["NEW_MESSAGE"]),
                 (payload, vars, context ) => {
-                    console.log('payload', payload)
                     return (payload.newMessage.conversation._id.toString() === vars.conversationId ) || {};
                 }
             )
