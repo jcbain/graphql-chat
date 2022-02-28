@@ -32,6 +32,10 @@ const resolvers = {
                 return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true }
             }
 
+            // if (!username || !password ) {
+            //     console.log(req)
+            // }
+
             if (!username || !password ) throw new Error("username or email can't be blanky");
             const foundUser = await users.getUserByUsername(username);
             if (!foundUser) throw new Error("no user found with that username");
