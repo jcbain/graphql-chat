@@ -8,8 +8,8 @@ const AuthContext = createContext();
 const AuthProvider = (props) => {
     const { children } = props;
     const { loading, error, data, refetch } = useQuery(GET_AUTH, {variables: {username: "", password: ""}});
-    const signIn = (username, password, callback) => {
-        refetch({username: username, password: password})
+    const signIn = async (username, password, callback) => {
+        await refetch({username: username, password: password})
         callback();        
     }
 

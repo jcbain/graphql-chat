@@ -47,7 +47,7 @@ const MessageController = (props) => {
       <>
          {error && <p>error</p>}
          {loading && <p>loading</p>}
-         {!loading && <Messages data={data.messages} username={username} createMessage={createMessage}/>}
+         {(!loading && data) && <Messages data={data.messages} username={username} createMessage={createMessage}/>}
       </>
    );
 }

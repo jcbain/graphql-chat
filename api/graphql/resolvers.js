@@ -43,12 +43,12 @@ const resolvers = {
                 expiresIn: `${numHours}hr`
             });
 
-
             res.cookie('token', token, {
                 secure: false,
                 httpOnly: true
             });
 
+            console.log('here')
 
             return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true}
         },
