@@ -23,16 +23,7 @@ const connectionString = `mongodb+srv://${process.env.MONGO_USER}:${process.env.
 
 const PORT = 8090;
 const app = express();
-// app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-//     res.setHeader("Access-Control-Allow-Credentials", true)
-//     res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000");
-//     if(req.method === 'OPTIONS') {
-//         return res.sendStatus(200);
-//     }
-//     next();
-// })
+
 app.use(cookieParser());
 app.use(isAuth);
 const httpServer = createServer(app);
@@ -85,7 +76,6 @@ const httpServer = createServer(app);
         allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
         exposedHeaders: ["set-cookie"],
         methods: ['GET', 'POST', 'OPTIONS']
-        // methods: ["POST"]
     } });
 
     httpServer.listen(PORT, () => {

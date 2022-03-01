@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useQuery, useMutation, gql } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
 import { useAuth } from '../../contexts/AuthProvider';
 import { GET_MESSAGES } from '../../graphql/queries';
@@ -14,14 +14,11 @@ const MessageController = (props) => {
       { variables: {conversationId: "61aa52764dd2f2fa797d5f3b"}}
    );
 
-
    const [addMessage] = useMutation(CREATE_MESSAGE);
 
    const createMessage = (body, receiverId ) => {
       addMessage({ variables: { body, receiverId, conversationId: "61aa52764dd2f2fa797d5f3b" }})
    } 
-
-   
 
    useEffect(() => {
       const subscribeToNewMessages = () =>

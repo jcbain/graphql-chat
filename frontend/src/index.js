@@ -15,12 +15,12 @@ import AuthProvider from './contexts/AuthProvider';
 // import { ThemeProvider } from 'styled-components';
 
 const httpLink = new HttpLink({
-  uri: 'http://10.0.0.78:8090/graphql',
+  uri: 'http://localhost:8090/graphql',
   credentials: 'include'
 });
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://10.0.0.78:8090/graphql',
+  uri: 'ws://localhost:8090/graphql',
   options: {
     reconnect: true
   }

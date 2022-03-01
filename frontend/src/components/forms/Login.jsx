@@ -16,16 +16,11 @@ const Login = (props) => {
 
   const from = location.state?.from?.pathname || "/";
 
-  console.log('whyyyy')
-  
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!password || !username) return;
 
-    console.log('username, password', username, password)
-
     auth.signIn(username, password, () => navigate(from))
-
   }
 
   return (

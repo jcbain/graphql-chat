@@ -4,12 +4,10 @@ import { PaperAirplane } from '@styled-icons/heroicons-outline/PaperAirplane'
 
 const Wrapper = styled.div`
   width: 100%;
-  /* border: 2px solid peru; */
   font-family: 'Readex Pro';
-  /* margin: 0 auto; */
   position: fixed;
   bottom: 0;
-`
+`;
 
 const Form = styled.form`
   display: flex;
@@ -18,23 +16,19 @@ const Form = styled.form`
   max-width: 800px;
   display: flex;
   margin: 0 auto;
-
-  /* border: 2px solid salmon; */
-`
+`;
 
 
 const SpanDiv = styled.div`
   padding: 10px;
   min-height: 30vh;
-  /* border: 2px dashed green; */
   display: flex;
   align-items: flex-end;;
-  
-  `
+`;
+
 const Span = styled.textarea`
   width: 100%;
   word-wrap: wrap;
-  /* outline: none; */
   color: ${props => props.theme.mainOutlineColor};
   border: 2px solid ${props => props.theme.mainOutlineColor};
   border-radius: 4px;
@@ -78,12 +72,12 @@ const Airplane = styled(PaperAirplane)`
 `
 const TextForm = (props) => {
   const { createMessage } = props;
-  const [stuff, setStuff] = useState("")
+  const [input, setInput] = useState("")
   const inputRef = useRef()
 
   useEffect(() => {
     if(inputRef.current){
-      if(stuff === ""){
+      if(input === ""){
         return inputRef.current.style.height = "38px"; 
       }
       inputRef.current.style.height = inputRef.current.scrollHeight + "px"
@@ -91,9 +85,9 @@ const TextForm = (props) => {
   })
 
   const submitData = () => {
-    if(stuff === "") return;
-    createMessage(stuff, "61a9c64073f73821ad313bab")
-    setStuff("")
+    if(input === "") return;
+    createMessage(input, "61a9c64073f73821ad313bab")
+    setInput("")
   }
 
   const handleFormSubmit = (event) => {
@@ -125,9 +119,9 @@ const TextForm = (props) => {
             onKeyDown={handleInputKeyDown}
             name="message" 
             type="text"
-            value={stuff} 
+            value={input} 
             placeholder='write your message here...'
-            onChange={event => setStuff(event.target.value)}
+            onChange={event => setInput(event.target.value)}
           >
           </Span>
         </SpanDiv>

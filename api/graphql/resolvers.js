@@ -1,7 +1,6 @@
 const { PubSub, withFilter } = require("graphql-subscriptions");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { runHttpQuery } = require("apollo-server-core");
 
 const pubsub = new PubSub();
 
@@ -25,16 +24,13 @@ const resolvers = {
             return await conversations.Model.find();
         },
         login: async (_, {username, password}, { dataSources: { users }, req, res}) => {
+
             const numHours = 2;
             if(req.isAuth && (!password || !username)) {
                 const userId = req.userId;
                 const foundUser = await users.getUser(userId);
                 return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true }
             }
-
-            // if (!username || !password ) {
-            //     console.log(req)
-            // }
 
             if (!username || !password ) throw new Error("username or email can't be blanky");
             const foundUser = await users.getUserByUsername(username);

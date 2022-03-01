@@ -7,8 +7,6 @@ const RequireAuth =(props) => {
     const auth = useAuth();
     const location = useLocation();
 
-    console.log("auth", auth)
-
     if(auth.loading) {
       return <p>loading...</p>
     }

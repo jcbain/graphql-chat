@@ -29,7 +29,6 @@ const Messages = (props) => {
    const messages = data.map((message, i, arr) => {
       const text = message.body;
       const showAvatar = (i < arr.length - 1 && message.sender.username !== arr[i + 1].sender.username) || i === arr.length - 1;
-      // i > 0 && console.log(message.sender.username, arr[i - 1].sender.username,showAvatar)
       const mine = message.sender.username === username;
       const initials = message.sender.username.substring(0, 2).toUpperCase();
       return (

@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 
 module.exports = (req, res, next) => {
-  console.log('did i run?')
   const { token } = req.cookies;
   if (!token) {
     req.isAuth = false;
