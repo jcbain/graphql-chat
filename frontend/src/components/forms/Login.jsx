@@ -5,7 +5,6 @@ import { useAuth } from "../../contexts/AuthProvider";
 import { Container, Form, Title, Input, Button } from './styles';
 
 
-// try turning this into a higher order component to avoid rerender issue?
 const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
