@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "621d7b1994b0abf242b853e2",
+    "username": "rosemaryh",
+    "email": "rosemary@test.com",
+    "password": "$2a$10$3rOSwu.3oHAcCR.arFeFIebCJlbYsaL.kYvtO35z3cJUzUCfGRaoG"
+  },
+  {
+    "_id": "621d7b1994b0abf242b853e3",
+    "username": "sissix",
+    "email": "sissix@test.com",
+    "password": "$2a$10$d0yBRW5cv6l5kljqqq7IMezuyIjp8H1whFuvWwxdh9/Mas95uyKZ."
+  }
+]

@@ -14,6 +14,7 @@ const RequireAuth =(props) => {
     if (!auth.loggedIn) {
       return <Navigate to="/login" state={{ from: location }} />;
     }
+
   
     return children;
 }

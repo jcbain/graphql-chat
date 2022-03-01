@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "seed": "node models/seedDb.js"
   },
   "dependencies": {
     "apollo-datasource-mongodb": "^0.5.2",

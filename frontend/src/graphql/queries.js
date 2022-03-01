@@ -27,10 +27,3 @@ export const GET_MESSAGES = gql`
    }
 `;
 
-// query {
-   //                  messages(conversationId: "61aa52764dd2f2fa797d5f3b") {
-   //                      _id
-   //                      body
-            
-   //                  }
-   //              }

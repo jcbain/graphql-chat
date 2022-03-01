@@ -6,7 +6,6 @@ const mineStyles = css`
    align-items: flex-end;
 `
 export const Wrapper = styled.article`
-   /* position: relative; */
    display: flex;
    flex-direction: column;
    row-gap: 4px;

@@ -35,14 +35,6 @@ function App() {
                 </RequireAuth>
               }
             />
-            <Route
-              path="/extraprotected"
-              element={
-                <RequireAuth>
-                  <div>you made it to something super secret</div>
-                </RequireAuth>
-              }
-            />
           </Routes>
 
       </div>

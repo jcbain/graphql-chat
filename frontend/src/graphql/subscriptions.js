@@ -16,7 +16,3 @@ export const MESSAGE_SUBSCRIPTION = gql`
     }
   }
 `
-
-// Subscription {
-//    newMessage(conversationId: ID!): Message!
-// }    
