@@ -48,8 +48,6 @@ const resolvers = {
                 httpOnly: true
             });
 
-            console.log('here')
-
             return { username: foundUser._doc.username, email: foundUser._doc.email, tokenExpiration: numHours, loggedIn: true}
         },
         checkAuth: async (_, __, { dataSources: { users }, req}) => {
